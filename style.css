@@ -951,3 +951,117 @@ button:focus:not(:focus-visible),
     gap: 0.24rem;
   }
 }
+
+.header-bar {
+  position: fixed;
+  top: 1rem;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  pointer-events: none;
+}
+
+.top-btn {
+  pointer-events: auto;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: background 0.2s ease;
+}
+.top-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+.left-btn { margin-right: auto; }
+.right-btn { margin-left: auto; }
+
+.search-bar {
+  position: fixed;
+  top: 4.5rem;
+  right: 1.5rem;
+  width: 80%;
+  max-width: 480px;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+}
+#searchInput {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+#searchInput::placeholder {
+  color: #ccc;
+}
+.main-title {
+  font-family: 'Inter', 'Poppins', Arial, sans-serif;
+  font-weight: 800;
+  font-size: 3.5rem;
+  letter-spacing: 0.23em;
+  text-transform: uppercase;
+  background: linear-gradient(100deg, #00eaff 10%, #3a8fff 40%, #a259ff 70%, #f7b731 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  user-select: none;
+  text-align: center;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.09;
+  text-shadow:
+    0 2px 16px rgba(58,143,255,0.28),
+    0 1px 2px rgba(0,0,0,0.12),
+    0 0 0.5px #fff;
+  position: relative;
+}
+
+.main-title::after {
+  content: "";
+  display: block;
+  width: 60%;
+  height: 6px;
+  margin: 0.7em auto 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #00eaff 0%, #f7b731 100%);
+  opacity: 0.16;
+  filter: blur(1.5px);
+}
+@media (max-width: 700px) {
+  .main-title {
+    font-size: 2.2rem;
+    letter-spacing: 0.12em;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#searchBar.animated-show {
+  display: flex !important;
+  animation: slideFadeIn 0.35s ease-out;
+}

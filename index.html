@@ -8,6 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <h1 class="main-title">RWJ Themes</h1>
+
+  <div class="header-bar">
+    <button class="top-btn left-btn" onclick="onLeftButtonClick()">🧭</button>
+    <button class="top-btn right-btn" onclick="toggleSearch()">🔍</button>
+  </div>
+  <div class="search-bar" id="searchBar" style="display: none;">
+    <input type="text" id="searchInput" placeholder="搜索主题、作者或标签..." />
+  </div>
+  
   <!-- 轮播大图区域 -->
   <div class="carousel" id="carousel">
     <div class="carousel-track" id="carouselTrack"></div>
@@ -505,6 +515,80 @@
         hideBigImg();
       }
     });
+
+    function toggleSearch() {
+      const bar = document.getElementById('searchBar');
+      if (bar.style.display === 'none' || bar.style.display === '') {
+        bar.classList.add('animated-show');
+        bar.style.display = 'flex';
+        document.getElementById('searchInput').focus();
+      } else {
+        bar.classList.remove('animated-show');
+        bar.style.display = 'none';
+        document.getElementById('searchInput').value = '';
+        renderGrid(cardThemes); // 恢复全部
+      }
+    }
+    
+    
+    function onLeftButtonClick() {
+      alert('你可以自定义左上角按钮功能，比如跳转、切换模式等');
+    }
+    
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', handleSearch);
+    
+    function handleSearch() {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = cardThemes.filter(theme => {
+        const titleMatch = theme.title.toLowerCase().includes(query);
+        const authorMatch = theme.author.name.toLowerCase().includes(query);
+        const tagMatch = theme.tags && theme.tags.some(tag => tag.toLowerCase().includes(query));
+        return titleMatch || authorMatch || tagMatch;
+      });
+    
+      renderGrid(filtered);
+    }
+    
+    // 提取出来你的卡片渲染函数，原本是写在循环里的，改成通用函数：
+    function renderGrid(themes) {
+      const grid = document.getElementById('themeGrid');
+      grid.innerHTML = '';
+      themes.forEach((theme, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="thumb-wrap">
+            <img class="thumb" src="${theme.thumb}" alt="${theme.title} 预览" loading="lazy"/>
+          </div>
+          <div class="title">
+            <span class="marquee-outer">
+              <span class="marquee-inner">${theme.title}</span>
+            </span>
+          </div>
+          <div class="desc">${theme.desc}</div>
+          <div class="author-info-card" tabindex="0" aria-label="作者 ${theme.author.name}">
+            <img class="author-avatar-card" src="${theme.author.avatar}" alt="作者头像" />
+            <span class="marquee-outer">
+              <span class="marquee-inner">${theme.author.name}</span>
+            </span>
+          </div>
+        `;
+        card.addEventListener('click', () => openModalCard(cardThemes.indexOf(theme)));
+        card.querySelector('.author-info-card').addEventListener('click', e => {
+          e.stopPropagation();
+          openModalCard(cardThemes.indexOf(theme));
+        });
+        card.querySelector('.author-info-card').addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openModalCard(cardThemes.indexOf(theme));
+          }
+        });
+        grid.appendChild(card);
+      });
+    }
+    
   </script>
 </body>
 </html>
