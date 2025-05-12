@@ -213,9 +213,6 @@ body {
     .carousel-desc {
       font-size: 0.85rem;
     }
-    .author-info-card {
-      display: none !important;
-    }
   }
   
   .main-title {
@@ -349,7 +346,16 @@ body {
     word-break: break-all;
   }
   .author-info-card {
-    display: none !important;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: auto;
+    cursor: pointer;
+    padding-top: 0.4rem;
+    padding-bottom: 0.2rem;
+    user-select: none;
+    transition: background 0.3s cubic-bezier(.77,0,.18,1.01);
+    overflow: hidden;
   }
   .author-avatar-card {
     width: 26px;
@@ -880,4 +886,64 @@ body,
   color: #fff !important;
   background: rgba(0,0,0,0.22);
   border-color: rgba(255,255,255,0.33);
+}
+@media (max-width: 700px) {
+  /* 卡片整体去掉PC毛玻璃、阴影、padding等 */
+  .card {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    overflow: visible !important;
+    display: block !important;
+    position: static !important;
+  }
+  /* 只显示壁纸和底部标题 */
+  .wallpaper-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9/16;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .wallpaper-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 16px;
+  }
+  .wallpaper-title-blur {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    min-height: 2.2em;
+    padding: 0.2em 1em 0.5em 1em;
+    background: rgba(30,30,30,0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: flex-end;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    width: 100%;
+  }
+  .wallpaper-title {
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.32);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+  /* 隐藏PC端内容区/描述/作者等 */
+  .card-content, .desc, .author-info-card, .card .title {
+    display: none !important;
+  }
 }
