@@ -213,6 +213,9 @@ body {
     .carousel-desc {
       font-size: 0.85rem;
     }
+    .author-info-card {
+      display: none !important;
+    }
   }
   
   .main-title {
