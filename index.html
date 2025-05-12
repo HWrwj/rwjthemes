@@ -35,7 +35,7 @@
   <div id="imgModal" onclick="hideBigImg()">
     <button class="blur-btn close-btn" onclick="hideBigImg();event.stopPropagation();" aria-label="关闭"></button>
     <button class="blur-btn slide-btn left" id="imgPrevBtn" onclick="showPrevImg(event)" aria-label="上一张">&#8592;</button>
-    <img id="bigImg" src="" alt="大图预览">
+    <img id="bigImg" src="" alt="大图预览" loading="lazy">
     <button class="blur-btn slide-btn right" id="imgNextBtn" onclick="showNextImg(event)" aria-label="下一张">&#8594;</button>
   </div>
 
@@ -272,7 +272,7 @@
       card.className = 'card';
       card.innerHTML = `
         <div class="thumb-wrap">
-          <img class="thumb" src="${theme.thumb}" alt="${theme.title} 预览" />
+          <img class="thumb" src="${theme.thumb}" alt="${theme.title} 预览" loading="lazy"/>
         </div>
         <div class="title">
           <span class="marquee-outer">
