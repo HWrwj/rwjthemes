@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RWJ Themes</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 轮播大图区域 -->
+  <div class="carousel" id="carousel">
+    <div class="carousel-track" id="carouselTrack"></div>
+    <div class="carousel-indicators" id="carouselIndicators"></div>
+  </div>
+
+  <div class="grid" id="themeGrid"></div>
+
+  <div id="modal-backdrop"></div>
+  <div id="modal" tabindex="-1">
+    <button class="blur-btn close-btn" onclick="closeModal()" aria-label="关闭"></button>
+    <div class="author-info" id="modal-author"></div>
+    <h2 id="modal-title"></h2>
+    <p id="modal-desc"></p>
+    <div class="tag-list" id="modal-tags"></div>
+    <div class="modal-imgs-wrap">
+      <button class="blur-btn slide-btn left" id="slideLeftBtn" onclick="slideImgs(-1)" title="上一页">&#8592;</button>
+      <div class="modal-imgs" id="modal-imgs"></div>
+      <button class="blur-btn slide-btn right" id="slideRightBtn" onclick="slideImgs(1)" title="下一页">&#8594;</button>
+    </div>
+    <div class="downloads" id="modal-downloads"></div>
+  </div>
+
+  <!-- 预览大图弹窗 -->
+  <div id="imgModal" onclick="hideBigImg()">
+    <button class="blur-btn close-btn" onclick="hideBigImg();event.stopPropagation();" aria-label="关闭"></button>
+    <button class="blur-btn slide-btn left" id="imgPrevBtn" onclick="showPrevImg(event)" aria-label="上一张">&#8592;</button>
+    <img id="bigImg" src="" alt="大图预览">
+    <button class="blur-btn slide-btn right" id="imgNextBtn" onclick="showNextImg(event)" aria-label="下一张">&#8594;</button>
+  </div>
+
+  <script>
+    // Fisher-Yates 随机算法
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // 轮播区专属主题
+    const carouselThemes = [
+    {
+      title: '扉间幻境',
+      desc: '当莫奈的光影实验，遇上量子纠缠的浪漫',
+      thumb: 'RWJ/扉间幻境/cover.jpg',
+      previews: ['RWJ/扉间幻境/cover.jpg', 'RWJ/扉间幻境/preview_icons_0.jpg', 'RWJ/扉间幻境/preview_unlock_0.jpg', 'RWJ/扉间幻境/preview_unlock_1.jpg', 'RWJ/扉间幻境/preview_unlock_2.jpg', 'RWJ/扉间幻境/preview_widget_0.jpg', 'RWJ/扉间幻境/preview_widget_1.jpg'],
+      tags: ['华为荣耀', '动态锁屏', '自定义'],
+      author: { name: "RWJ", avatar: "RWJ/avatar.jpg" },
+      downloads: [
+        { name: '百度网盘', url: '#' },
+        { name: '备用直链', url: 'https://example.com/theme3.zip' }
+      ]
+    },
+    {
+      title: '灰原哀',
+      desc: '本主题由 酷安@RWJ__ 制作；未经允许请勿二传、倒卖',
+      thumb: 'RWJ/灰原哀/cover.jpg',
+      previews: ['RWJ/灰原哀/cover.jpg', 'RWJ/灰原哀/preview_unlock_0.jpg', 'RWJ/灰原哀/preview_widget_0.jpg', 'RWJ/灰原哀/preview_widget_1.png'],
+      tags: ['华为', '一镜到底'],
+      author: { name: "RWJ", avatar: "RWJ/avatar.jpg" },
+      downloads: [
+        { name: '百度网盘', url: '#' }
+      ]
+    },
+    {
+      title: '光宇',
+      desc: 'HarmonyOS NEXT 5.0 预置主题，由RWJ移植',
+      thumb: 'PresetTheme/光宇/cover.jpg',
+      previews: ['PresetTheme/光宇/cover.jpg', 'PresetTheme/光宇/preview_unlock_0.jpg', 'PresetTheme/光宇/preview_widget_0.jpg', 'PresetTheme/光宇/preview_widget_1.png', 'PresetTheme/光宇/preview_video_image.jpg'],
+      tags: ['华为', '预置', '一镜到底'],
+      author: { name: "PresetTheme", avatar: "PresetTheme/avatar.png" },
+      downloads: [
+        { name: '百度网盘', url: '#' }
+      ]
+    }
+    ];
+
+    // 小卡片区全部主题
+    const allCardThemes = [
+      {
+        title: '扉间幻境',
+        desc: '当莫奈的光影实验，遇上量子纠缠的浪漫',
+        thumb: 'RWJ/扉间幻境/cover.jpg',
+        previews: ['RWJ/扉间幻境/cover.jpg', 'RWJ/扉间幻境/preview_icons_0.jpg', 'RWJ/扉间幻境/preview_unlock_0.jpg', 'RWJ/扉间幻境/preview_unlock_1.jpg', 'RWJ/扉间幻境/preview_unlock_2.jpg', 'RWJ/扉间幻境/preview_widget_0.jpg', 'RWJ/扉间幻境/preview_widget_1.jpg'],
+        tags: ['华为荣耀', '动态锁屏', '自定义'],
+        author: { name: "RWJ", avatar: "RWJ/avatar.jpg" },
+        downloads: [
+          { name: '百度网盘', url: '#' },
+          { name: '备用直链', url: 'https://example.com/theme3.zip' }
+        ]
+      },
+      {
+        title: '灰原哀',
+        desc: '本主题由 酷安@RWJ__ 制作；未经允许请勿二传、倒卖',
+        thumb: 'RWJ/灰原哀/cover.jpg',
+        previews: ['RWJ/灰原哀/cover.jpg', 'RWJ/灰原哀/preview_unlock_0.jpg', 'RWJ/灰原哀/preview_widget_0.jpg', 'RWJ/灰原哀/preview_widget_1.png'],
+        tags: ['华为', '一镜到底'],
+        author: { name: "RWJ", avatar: "RWJ/avatar.jpg" },
+        downloads: [
+          { name: '百度网盘', url: '#' }
+        ]
+      },
+      {
+        title: '光宇',
+        desc: 'HarmonyOS NEXT 5.0 预置主题，由RWJ移植',
+        thumb: 'PresetTheme/光宇/cover.jpg',
+        previews: ['PresetTheme/光宇/cover.jpg', 'PresetTheme/光宇/preview_unlock_0.jpg', 'PresetTheme/光宇/preview_widget_0.jpg', 'PresetTheme/光宇/preview_widget_1.png', 'PresetTheme/光宇/preview_video_image.jpg'],
+        tags: ['华为', '预置', '一镜到底'],
+        author: { name: "PresetTheme", avatar: "PresetTheme/avatar.png" },
+        downloads: [
+          { name: '百度网盘', url: '#' }
+        ]
+      },
+      {
+        title: '织锦青',
+        desc: 'Huawei Mate 70系列预置主题，RWJ移植',
+        thumb: 'PresetTheme/织锦青/cover.jpg',
+        previews: ['PresetTheme/织锦青/cover.jpg', 'PresetTheme/织锦青/preview_unlock_0.jpg', 'PresetTheme/织锦青/preview_widget_0.jpg', 'PresetTheme/织锦青/preview_widget_1.jpg', 'PresetTheme/织锦青/preview_video_image.png', 'PresetTheme/织锦青/other_preview_video_image.jpg', 'PresetTheme/织锦青/other_preview_unlock_0.jpg', 'PresetTheme/织锦青/other_cover.jpg'],
+        tags: ['华为', '预置', '一镜到底'],
+        author: { name: "PresetTheme", avatar: "PresetTheme/avatar.png" },
+        downloads: [
+          { name: '百度网盘', url: '#' }
+        ]
+      },
+      {
+        title: '潮涌',
+        desc: 'HarmonyOS NEXT 5.0 预置主题，由RWJ移植',
+        thumb: 'PresetTheme/潮涌/cover.jpg',
+        previews: ['PresetTheme/潮涌/cover.jpg', 'PresetTheme/潮涌/preview_unlock_0.jpg', 'PresetTheme/潮涌/preview_widget_0.jpg', 'PresetTheme/潮涌/preview_video_image.png'],
+        tags: ['华为', '预置', '一镜到底'],
+        author: { name: "PresetTheme", avatar: "PresetTheme/avatar.png" },
+        downloads: [
+          { name: '百度网盘', url: '#' }
+        ]
+      },
+      {
+        title: '光场',
+        desc: 'HarmonyOS NEXT 5.0 预置主题，由RWJ移植',
+        thumb: 'PresetTheme/光场/cover.jpg',
+        previews: ['PresetTheme/光场/cover.jpg', 'PresetTheme/光场/preview_unlock_0.jpg', 'PresetTheme/光场/preview_widget_0.jpg', 'PresetTheme/光场/preview_video_image.png'],
+        tags: ['华为', '预置', '一镜到底'],
+        author: { name: "PresetTheme", avatar: "PresetTheme/avatar.png" },
+        downloads: [
+          { name: '百度网盘', url: '#' }
+        ]
+      },
+      {
+        title: '寰宇',
+        desc: 'HarmonyOS NEXT 5.0 预置主题，由RWJ移植',
+        thumb: 'PresetTheme/寰宇/cover.jpg',
+        previews: ['PresetTheme/寰宇/cover.jpg', 'PresetTheme/寰宇/preview_unlock_0.jpg', 'PresetTheme/寰宇/preview_widget_0.jpg', 'PresetTheme/寰宇/preview_video_image.png'],
+        tags: ['华为', '预置', '一镜到底'],
+        author: { name: "PresetTheme", avatar: "PresetTheme/avatar.png" },
+        downloads: [
+          { name: '百度网盘', url: '#' }
+        ]
+      }
+    ];
+
+    // 选定特权主题（这里选前3个，也可按实际需要指定）
+    const privilegeThemes = allCardThemes.slice(0, 3);
+    const normalThemes = allCardThemes.slice(3);
+    shuffle(normalThemes);
+    const cardThemes = privilegeThemes.concat(normalThemes);
+
+    // 轮播大图
+    const carouselTrack = document.getElementById('carouselTrack');
+    const carouselIndicators = document.getElementById('carouselIndicators');
+    let carouselIndex = 0;
+    let carouselTimer = null;
+    let carouselPaused = false;
+
+    function renderCarousel() {
+      carouselTrack.innerHTML = '';
+      carouselIndicators.innerHTML = '';
+      carouselThemes.forEach((theme, idx) => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item' + (idx === carouselIndex ? ' active' : '');
+        item.tabIndex = 0;
+        item.setAttribute('role', 'button');
+        item.setAttribute('aria-label', theme.title);
+        item.innerHTML = `
+          <img class="carousel-img" src="${theme.previews[0] || theme.thumb}" alt="${theme.title} 主题大图" />
+          <div class="carousel-caption">
+            <div class="carousel-title">
+              <span class="marquee-outer">
+                <span class="marquee-inner">${theme.title}</span>
+              </span>
+            </div>
+            <div class="carousel-desc">${theme.desc}</div>
+          </div>
+        `;
+        item.onclick = () => openModalCarousel(idx);
+        item.onkeydown = e => {
+          if (e.key === 'Enter' || e.key === ' ') openModalCarousel(idx);
+        };
+        carouselTrack.appendChild(item);
+
+        // 指示点
+        const dot = document.createElement('span');
+        dot.className = 'carousel-dot' + (idx === carouselIndex ? ' active' : '');
+        dot.onclick = () => { setCarousel(idx); };
+        carouselIndicators.appendChild(dot);
+      });
+
+      // 动画：滑动方向
+      document.querySelectorAll('.carousel-item').forEach((el, idx) => {
+        el.classList.remove('slide-in-left', 'slide-in-right');
+        if (idx === carouselIndex) {
+          if (typeof renderCarousel.lastIndex === 'number') {
+            if (carouselIndex > renderCarousel.lastIndex || (carouselIndex === 0 && renderCarousel.lastIndex === carouselThemes.length - 1)) {
+              el.classList.add('slide-in-right');
+            } else if (carouselIndex < renderCarousel.lastIndex || (carouselIndex === carouselThemes.length - 1 && renderCarousel.lastIndex === 0)) {
+              el.classList.add('slide-in-left');
+            }
+          }
+        }
+      });
+      renderCarousel.lastIndex = carouselIndex;
+
+      // 主题名轮播
+      updateMarquee();
+    }
+    function setCarousel(idx) {
+      carouselIndex = idx;
+      renderCarousel();
+      resetCarouselTimer();
+    }
+    function nextCarousel() {
+      carouselIndex = (carouselIndex + 1) % carouselThemes.length;
+      renderCarousel();
+      resetCarouselTimer();
+    }
+    function resetCarouselTimer() {
+      if (carouselTimer) clearInterval(carouselTimer);
+      if (!carouselPaused) {
+        carouselTimer = setInterval(() => {
+          nextCarousel();
+        }, 5000);
+      }
+    }
+    function pauseCarousel() {
+      carouselPaused = true;
+      if (carouselTimer) clearInterval(carouselTimer);
+    }
+    function resumeCarousel() {
+      carouselPaused = false;
+      resetCarouselTimer();
+    }
+    document.getElementById('carousel').onmouseenter = pauseCarousel;
+    document.getElementById('carousel').onmouseleave = resumeCarousel;
+    document.getElementById('carousel').ontouchstart = pauseCarousel;
+    document.getElementById('carousel').ontouchend = resumeCarousel;
+    renderCarousel();
+    resetCarouselTimer();
+
+    // 主页小卡片
+    const grid = document.getElementById('themeGrid');
+    cardThemes.forEach((theme, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="thumb-wrap">
+          <img class="thumb" src="${theme.thumb}" alt="${theme.title} 预览" />
+        </div>
+        <div class="title">
+          <span class="marquee-outer">
+            <span class="marquee-inner">${theme.title}</span>
+          </span>
+        </div>
+        <div class="desc">${theme.desc}</div>
+        <div class="author-info-card" tabindex="0" aria-label="作者 ${theme.author.name}">
+          <img class="author-avatar-card" src="${theme.author.avatar}" alt="作者头像" />
+          <span class="marquee-outer">
+            <span class="marquee-inner">${theme.author.name}</span>
+          </span>
+        </div>
+      `;
+      card.addEventListener('click', () => openModalCard(idx));
+      card.querySelector('.author-info-card').addEventListener('click', e => {
+        e.stopPropagation();
+        openModalCard(idx);
+      });
+      card.querySelector('.author-info-card').addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModalCard(idx);
+        }
+      });
+      grid.appendChild(card);
+    });
+
+    // 通用marquee检测
+    function updateMarquee() {
+      document.querySelectorAll('.marquee-outer').forEach(outer => {
+        const inner = outer.querySelector('.marquee-inner');
+        if (!inner) return;
+        inner.classList.remove('marquee');
+        inner.style.removeProperty('--scroll-distance');
+        if (inner.scrollWidth > outer.offsetWidth) {
+          const distance = inner.scrollWidth - outer.offsetWidth;
+          inner.style.setProperty('--scroll-distance', distance + 'px');
+          inner.classList.add('marquee');
+        }
+      });
+    }
+    window.addEventListener('load', updateMarquee);
+    window.addEventListener('resize', updateMarquee);
+
+    // 横向分页相关
+    let currentPage = 0;
+    let currentImgs = [];
+    const PC_PAGE_SIZE = 4;
+    function renderImgs(imgs) {
+      const isMobile = window.innerWidth <= 700;
+      const container = document.getElementById('modal-imgs');
+      container.innerHTML = '';
+      if (isMobile) {
+        imgs.forEach(src => {
+          const wrap = document.createElement('div');
+          wrap.className = 'img-wrap';
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '主题预览图';
+          img.onclick = e => {
+            e.stopPropagation();
+            showBigImg(src, imgs);
+          };
+          wrap.appendChild(img);
+          container.appendChild(wrap);
+        });
+        document.getElementById('slideLeftBtn').style.display = 'none';
+        document.getElementById('slideRightBtn').style.display = 'none';
+      } else {
+        const totalPages = Math.ceil(imgs.length / PC_PAGE_SIZE) || 1;
+        currentPage = Math.max(0, Math.min(currentPage, totalPages - 1));
+        const start = currentPage * PC_PAGE_SIZE;
+        const end = Math.min(start + PC_PAGE_SIZE, imgs.length);
+        const pageImgs = imgs.slice(start, end);
+        for (let i = 0; i < PC_PAGE_SIZE; i++) {
+          const wrap = document.createElement('div');
+          wrap.className = 'img-wrap' + (pageImgs[i] ? '' : ' placeholder');
+          if (pageImgs[i]) {
+            const img = document.createElement('img');
+            img.src = pageImgs[i];
+            img.alt = '主题预览图';
+            img.onclick = e => {
+              e.stopPropagation();
+              showBigImg(pageImgs[i], imgs);
+            };
+            wrap.appendChild(img);
+          }
+          container.appendChild(wrap);
+        }
+        const leftBtn = document.getElementById('slideLeftBtn');
+        const rightBtn = document.getElementById('slideRightBtn');
+        if (totalPages > 1) {
+          leftBtn.style.display = 'flex';
+          rightBtn.style.display = 'flex';
+          leftBtn.disabled = currentPage === 0;
+          rightBtn.disabled = currentPage === totalPages - 1;
+        } else {
+          leftBtn.style.display = 'none';
+          rightBtn.style.display = 'none';
+        }
+      }
+    }
+    function slideImgs(dir) {
+      const imgs = currentImgs;
+      const totalPages = Math.ceil(imgs.length / PC_PAGE_SIZE) || 1;
+      currentPage += dir;
+      currentPage = Math.max(0, Math.min(currentPage, totalPages - 1));
+      renderImgs(imgs);
+    }
+    window.addEventListener('resize', () => {
+      if (currentImgs.length) renderImgs(currentImgs);
+    });
+
+    // 弹窗：轮播主题
+    function openModalCarousel(idx) {
+      const theme = carouselThemes[idx];
+      openModalCommon(theme);
+    }
+    // 弹窗：卡片主题
+    function openModalCard(idx) {
+      const theme = cardThemes[idx];
+      openModalCommon(theme);
+    }
+    // 通用弹窗
+    function openModalCommon(theme) {
+      const modal = document.getElementById('modal');
+      const backdrop = document.getElementById('modal-backdrop');
+      const authorDiv = document.getElementById('modal-author');
+      authorDiv.innerHTML = `
+        <img class="author-avatar" src="${theme.author.avatar}" alt="${theme.author.name}">
+        <span class="author-name">${theme.author.name}</span>
+      `;
+      document.getElementById('modal-title').textContent = theme.title;
+      document.getElementById('modal-desc').textContent = theme.desc;
+      const tagDiv = document.getElementById('modal-tags');
+      tagDiv.innerHTML = '';
+      if (theme.tags && theme.tags.length) {
+        theme.tags.forEach(tag => {
+          const tagEl = document.createElement('span');
+          tagEl.className = 'tag-glass';
+          tagEl.textContent = tag;
+          tagDiv.appendChild(tagEl);
+        });
+      }
+      currentImgs = theme.previews;
+      currentPage = 0;
+      renderImgs(currentImgs);
+
+      const dlContainer = document.getElementById('modal-downloads');
+      dlContainer.innerHTML = '';
+      theme.downloads.forEach(dl => {
+        const span = document.createElement('span');
+        span.className = 'tag-glass download-link';
+        span.textContent = dl.name;
+        span.onclick = () => window.open(dl.url, '_blank');
+        dlContainer.appendChild(span);
+      });
+
+      if (window.innerWidth <= 700) {
+        document.body.style.overflow = 'hidden';
+      }
+      modal.classList.remove('hide');
+      modal.style.visibility = 'visible';
+      backdrop.classList.add('show');
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 10);
+      modal.focus();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      const backdrop = document.getElementById('modal-backdrop');
+      modal.classList.remove('show');
+      modal.classList.add('hide');
+      backdrop.classList.remove('show');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        modal.classList.remove('hide');
+        modal.style.visibility = 'hidden';
+      }, 500);
+    }
+    document.getElementById('modal-backdrop').onclick = closeModal;
+
+    // 预览大图弹窗相关
+    let bigImgs = [];
+    let bigImgIdx = 0;
+    function showBigImg(src, arr) {
+      bigImgs = arr || [src];
+      bigImgIdx = bigImgs.indexOf(src);
+      if (bigImgIdx === -1) bigImgIdx = 0;
+      updateBigImgBtns();
+      document.getElementById('bigImg').src = bigImgs[bigImgIdx];
+      document.getElementById('imgModal').classList.add('show');
+      if (window.innerWidth <= 700) {
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    function hideBigImg() {
+      document.getElementById('imgModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    function showPrevImg(e) {
+      e && e.stopPropagation();
+      if (bigImgIdx > 0) {
+        bigImgIdx--;
+        document.getElementById('bigImg').src = bigImgs[bigImgIdx];
+        updateBigImgBtns();
+      }
+    }
+    function showNextImg(e) {
+      e && e.stopPropagation();
+      if (bigImgIdx < bigImgs.length - 1) {
+        bigImgIdx++;
+        document.getElementById('bigImg').src = bigImgs[bigImgIdx];
+        updateBigImgBtns();
+      }
+    }
+    function updateBigImgBtns() {
+      document.getElementById('imgPrevBtn').disabled = bigImgIdx <= 0;
+      document.getElementById('imgNextBtn').disabled = bigImgIdx >= bigImgs.length - 1;
+    }
+    document.getElementById('bigImg').onclick = function(e) {
+      e.stopPropagation();
+    };
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+        hideBigImg();
+      }
+    });
+  </script>
+</body>
+</html>
