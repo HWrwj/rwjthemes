@@ -1065,3 +1065,7 @@ button:focus:not(:focus-visible),
   display: flex !important;
   animation: slideFadeIn 0.35s ease-out;
 }
+
+.header-bar, #searchBar {
+  z-index: 999; /* 高于卡片、轮播，但低于 modal */
+}
