@@ -346,16 +346,7 @@ body {
     word-break: break-all;
   }
   .author-info-card {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    margin-top: auto;
-    cursor: pointer;
-    padding-top: 0.4rem;
-    padding-bottom: 0.2rem;
-    user-select: none;
-    transition: background 0.3s cubic-bezier(.77,0,.18,1.01);
-    overflow: hidden;
+    display: none !important;
   }
   .author-avatar-card {
     width: 26px;
