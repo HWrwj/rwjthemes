@@ -1076,12 +1076,7 @@ button:focus:not(:focus-visible),
     width: 100%;
   }
 }
-.card {
-  transition: transform 0.28s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.18s cubic-bezier(.77,0,.18,1.01);
-}
-.carousel-item {
-  transition: opacity 0.32s cubic-bezier(.68,-0.55,.27,1.55), transform 0.32s cubic-bezier(.68,-0.55,.27,1.55);
-}
+
 #imgModal {
   display: flex;
   align-items: center;
