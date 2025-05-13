@@ -1,5 +1,5 @@
 body {
-    background: url('https://images.unsplash.com/photo-1503264116251-35a269479413') no-repeat center center/cover;
+  background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=cover&w=1200&q=60') no-repeat center center/cover;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -70,7 +70,7 @@ body {
     position: relative;
     overflow: hidden;
     border-radius: 22px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
     background: rgba(255,255,255,0.12);
     display: flex;
     align-items: center;
@@ -253,7 +253,7 @@ body {
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     border: 1.5px solid rgba(255,255,255,0.3);
     padding: 0.7rem 0.7rem 1rem 0.7rem;
     width: 180px;
@@ -1067,4 +1067,55 @@ button:focus:not(:focus-visible),
 
 .header-bar, #searchBar {
   z-index: 999; /* 高于卡片、轮播，但低于 modal */
+}
+@media (max-width: 700px) {
+  .card {
+    background: rgba(255,255,255,0.10);
+  }
+}
+.card {
+  transition: transform 0.28s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.18s cubic-bezier(.77,0,.18,1.01);
+}
+.carousel-item {
+  transition: opacity 0.32s cubic-bezier(.68,-0.55,.27,1.55), transform 0.32s cubic-bezier(.68,-0.55,.27,1.55);
+}
+#imgModal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 9999;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.44);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(.68,-0.55,.27,1.55);
+}
+#imgModal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+#imgModal #bigImg {
+  max-width: 92vw;
+  max-height: 92vh;
+  border-radius: 14px;
+  background: #eee;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.19);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 0.35s cubic-bezier(.68,-0.55,.27,1.55), transform 0.35s cubic-bezier(.68,-0.55,.27,1.55);
+}
+#imgModal.show #bigImg {
+  opacity: 1;
+  transform: scale(1);
+}
+#modal .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;         /* Firefox */
+  -ms-overflow-style: none;      /* IE 10+ */
+}
+#modal .modal-content::-webkit-scrollbar {
+  display: none;                 /* Chrome/Safari/Edge */
 }
