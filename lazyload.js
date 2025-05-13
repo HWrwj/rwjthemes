@@ -966,4 +966,74 @@
         document.getElementById('userPanelBackdrop').classList.remove('show');
         document.body.style.overflow = '';
       }
-      
+
+  const video = document.getElementById('bgVideo');
+  let lastTime = 0;
+  let checkCount = 0;
+  const maxChecks = 5;
+  let videoPaused = false;
+  let effectsReduced = false;
+
+  const intervalId = setInterval(() => {
+    const currentTime = video.currentTime;
+    const diff = currentTime - lastTime;
+
+    // === 第一级：轻度卡顿，暂停视频 ===
+    if (diff < 0.05 && !videoPaused) {
+      console.warn("检测到轻度卡顿，暂停视频");
+      video.pause();
+      videoPaused = true;
+    }
+
+    // === 第二级：严重卡顿，移除模糊 + 弹出提示框 ===
+    if (diff < 0.01 && !effectsReduced) {
+      console.warn("检测到严重卡顿，移除模糊效果并增强不透明度");
+      removeAllBlur();
+      increaseOpacity();
+      showPerformanceWarning();
+      effectsReduced = true;
+      clearInterval(intervalId); // 检测完成
+    }
+
+    lastTime = currentTime;
+    checkCount++;
+    if (checkCount >= maxChecks) {
+      clearInterval(intervalId);
+    }
+  }, 3000);
+
+  function removeAllBlur() {
+    const all = document.querySelectorAll('*');
+    all.forEach(el => {
+      const style = getComputedStyle(el);
+      if (style.filter.includes('blur') || style.backdropFilter.includes('blur')) {
+        el.style.filter = 'none';
+        el.style.backdropFilter = 'none';
+      }
+    });
+  }
+
+  function showPerformanceWarning() {
+    const box = document.createElement('div');
+    box.textContent = "检测到当前设备性能较低，已关闭部分视觉效果以提升流畅度。";
+    box.style = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.75);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+    `;
+    document.body.appendChild(box);
+
+    // 5 秒后自动淡出
+    setTimeout(() => {
+      box.style.opacity = '0';
+      setTimeout(() => box.remove(), 1000);
+    }, 5000);
+  }
