@@ -1,5 +1,4 @@
 body {
-  background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=cover&w=1200&q=60') no-repeat center center/cover;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -8,7 +7,6 @@ body {
     color: white;
     font-family: 'Inter', 'Poppins', Arial, sans-serif;
     overflow-x: hidden;
-    background-attachment: fixed;
   }
   /* marquee通用结构：主题名、作者名都可用 */
 .marquee-outer {
@@ -1282,5 +1280,10 @@ button:focus:not(:focus-visible),
   #imgModal,
   #imgModal #bigImg {
     transition-duration: 0.7s !important; /* 更慢 */
+  }
+}
+@media screen and (min-width: 700px) {
+  .carousel {
+    display: none;
   }
 }

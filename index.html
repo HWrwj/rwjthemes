@@ -8,8 +8,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1 class="main-title">RWJ Themes</h1>
+  <video id="bgVideo" autoplay loop muted playsinline
+  style="
+    position: fixed;
+    left: 0; top: 0; width: 100vw; height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    pointer-events: none;
+    background: #000;
+  ">
+  <source src="bg.webm" type="video/webm">
+  <!-- 可选：mp4备用 -->
+  <!-- <source src="your-background.mp4" type="video/mp4"> -->
+</video>
 
+  <h1 class="main-title">RWJ Themes</h1>
   <div class="header-bar">
     <button class="top-btn left-btn" onclick="onLeftButtonClick()">🧭</button>
     <button class="top-btn right-btn" onclick="toggleSearch()">🔍</button>
