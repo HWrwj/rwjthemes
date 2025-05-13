@@ -29,17 +29,20 @@
   <div id="modal-backdrop"></div>
   <div id="modal" tabindex="-1">
     <button class="blur-btn close-btn" onclick="closeModal()" aria-label="关闭"></button>
-    <div class="author-info" id="modal-author"></div>
-    <h2 id="modal-title"></h2>
-    <p id="modal-desc"></p>
-    <div class="tag-list" id="modal-tags"></div>
-    <div class="modal-imgs-wrap">
-      <button class="blur-btn slide-btn left" id="slideLeftBtn" onclick="slideImgs(-1)" title="上一页">&#8592;</button>
-      <div class="modal-imgs" id="modal-imgs"></div>
-      <button class="blur-btn slide-btn right" id="slideRightBtn" onclick="slideImgs(1)" title="下一页">&#8594;</button>
+    <div class="modal-content">
+      <div class="author-info" id="modal-author"></div>
+      <h2 id="modal-title"></h2>
+      <p id="modal-desc"></p>
+      <div class="tag-list" id="modal-tags"></div>
+      <div class="modal-imgs-wrap">
+        <button class="blur-btn slide-btn left" id="slideLeftBtn" onclick="slideImgs(-1)" title="上一页">&#8592;</button>
+        <div class="modal-imgs" id="modal-imgs"></div>
+        <button class="blur-btn slide-btn right" id="slideRightBtn" onclick="slideImgs(1)" title="下一页">&#8594;</button>
+      </div>
+      <div class="downloads" id="modal-downloads"></div>
     </div>
-    <div class="downloads" id="modal-downloads"></div>
   </div>
+  
 
   <!-- 预览大图弹窗 -->
   <div id="imgModal" onclick="hideBigImg()">
